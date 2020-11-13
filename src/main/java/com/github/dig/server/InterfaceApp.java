@@ -1,5 +1,6 @@
 package com.github.dig.server;
 
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 
@@ -14,15 +15,25 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 @Log
+@Getter
 public class InterfaceApp {
 
+    @Getter
+    private static InterfaceApp instance;
+
     private Properties configuration;
+
     private TrayIcon trayIcon;
+    private boolean lastIconState;
 
     private InterfaceSocket socket;
 
     public InterfaceApp() {
         File folder = new File(System.getenv("APPDATA") + File.separator + "InterfaceClient");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
         if (!loadConfiguration(folder)) {
             try {
                 Desktop.getDesktop().open(folder);
@@ -46,10 +57,7 @@ public class InterfaceApp {
         try {
             String hostName = configuration.getProperty("hostUri", Defaults.HOST);
             socket = new InterfaceSocket(new URI(hostName));
-            if (socket.isOpen()) {
-                trayIcon.setImage(getResourceImage("on.png"));
-            }
-        } catch (URISyntaxException | IOException e) {
+        } catch (URISyntaxException e) {
             log.log(Level.SEVERE, "Unable to create new socket connection", e);
         }
     }
@@ -66,15 +74,41 @@ public class InterfaceApp {
         SystemTray.getSystemTray().add(trayIcon);
     }
 
+    public void execute() {
+        try {
+            socket.connectBlocking();
+            updateTrayIcon();
+
+            while (true) {
+                if (socket.isClosed()) {
+                    socket.reconnectBlocking();
+                    updateTrayIcon();
+                }
+                Thread.sleep(30 * 1000);
+            }
+        } catch (InterruptedException e) {
+            log.log(Level.SEVERE, "Thread interrupted, shutting down...", e);
+            close();
+        }
+    }
+
     private Image getResourceImage(@NonNull String imagePath) throws IOException {
         return ImageIO.read(getClass().getClassLoader().getResourceAsStream(imagePath));
     }
 
-    private boolean loadConfiguration(@NonNull File dataFolder) {
-        if (!dataFolder.exists()) {
-            dataFolder.mkdir();
+    private void updateTrayIcon() {
+        if (lastIconState != socket.isOpen()) {
+            lastIconState = socket.isOpen();
+            
+            try {
+                trayIcon.setImage(getResourceImage((socket.isOpen() ? "on" : "off") + ".png"));
+            } catch (IOException e) {
+                log.log(Level.SEVERE, "Unable to update tray icon", e);
+            }
         }
+    }
 
+    private boolean loadConfiguration(@NonNull File dataFolder) {
         File config = new File(dataFolder, "config.properties");
         if (config.exists()) {
             try {
@@ -96,6 +130,7 @@ public class InterfaceApp {
     }
 
     public static void main(String args[]) {
-        new InterfaceApp();
+        instance = new InterfaceApp();
+        instance.execute();
     }
 }
