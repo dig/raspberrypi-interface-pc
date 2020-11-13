@@ -1,1 +1,1 @@
-# raspberrypi-interface-server
+# raspberrypi-interface-pc
