@@ -7,4 +7,6 @@ public class Defaults {
 
     public final static String HOST = "ws://localhost:3723";
 
+    public final static int SOCKET_RECONNECT = 30;
+
 }

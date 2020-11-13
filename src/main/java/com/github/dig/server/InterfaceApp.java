@@ -75,6 +75,7 @@ public class InterfaceApp {
     }
 
     public void execute() {
+        int reconnect = (int) configuration.getOrDefault("socket-reconnect", Defaults.SOCKET_RECONNECT);
         try {
             socket.connectBlocking();
             updateTrayIcon();
@@ -84,7 +85,7 @@ public class InterfaceApp {
                     socket.reconnectBlocking();
                     updateTrayIcon();
                 }
-                Thread.sleep(30 * 1000);
+                Thread.sleep(reconnect * 1000);
             }
         } catch (InterruptedException e) {
             log.log(Level.SEVERE, "Thread interrupted, shutting down...", e);
@@ -99,7 +100,7 @@ public class InterfaceApp {
     private void updateTrayIcon() {
         if (lastIconState != socket.isOpen()) {
             lastIconState = socket.isOpen();
-            
+
             try {
                 trayIcon.setImage(getResourceImage((socket.isOpen() ? "on" : "off") + ".png"));
             } catch (IOException e) {
