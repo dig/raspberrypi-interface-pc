@@ -1,40 +1,33 @@
 package com.github.dig.server;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
+import java.net.URI;
 
-public class InterfaceSocket extends WebSocketServer {
+public class InterfaceSocket extends WebSocketClient {
 
-    public InterfaceSocket(int port) throws UnknownHostException {
-        super(new InetSocketAddress(port));
+    public InterfaceSocket(URI serverUri) {
+        super(serverUri);
     }
 
     @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-
-    }
-
-    @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+    public void onOpen(ServerHandshake handshakedata) {
 
     }
 
     @Override
-    public void onMessage(WebSocket conn, String message) {
+    public void onMessage(String message) {
 
     }
 
     @Override
-    public void onError(WebSocket conn, Exception ex) {
+    public void onClose(int code, String reason, boolean remote) {
 
     }
 
     @Override
-    public void onStart() {
+    public void onError(Exception ex) {
 
     }
 }
