@@ -56,7 +56,7 @@ public class InterfaceApp {
 
         try {
             String hostName = configuration.getProperty("hostUri", Defaults.HOST);
-            socket = new InterfaceSocket(new URI(hostName));
+            socket = new InterfaceSocket(new URI(hostName), configuration.getProperty("authKey", Defaults.AUTH_KEY));
         } catch (URISyntaxException e) {
             log.log(Level.SEVERE, "Unable to create new socket connection", e);
         }
