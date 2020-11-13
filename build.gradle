@@ -1,7 +1,13 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'java'
+    id 'application'
 }
+
+mainClassName = 'com.github.dig.server.InterfaceApp'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 group 'com.github.dig'
 version '1.0-SNAPSHOT'
@@ -11,5 +17,7 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    compileOnly 'org.projectlombok:lombok:1.18.8'
     compile 'org.java-websocket:Java-WebSocket:1.5.1'
 }
