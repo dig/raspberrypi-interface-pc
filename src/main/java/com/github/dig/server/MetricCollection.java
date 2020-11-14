@@ -3,6 +3,7 @@ package com.github.dig.server;
 import com.github.dig.server.collector.Collector;
 import com.github.dig.server.collector.gpu.GpuNameCollector;
 import com.github.dig.server.collector.memory.MemoryAvailableCollector;
+import com.github.dig.server.collector.memory.MemoryNameCollector;
 import com.github.dig.server.collector.memory.MemoryTotalCollector;
 import com.github.dig.server.collector.processor.ProcessorNameCollector;
 import com.github.dig.server.collector.processor.ProcessorTempCollector;
@@ -24,6 +25,7 @@ public class MetricCollection extends Thread {
             new GpuNameCollector(SYSTEM_INFO),
 
             new MemoryAvailableCollector(SYSTEM_INFO),
+            new MemoryNameCollector(SYSTEM_INFO),
             new MemoryTotalCollector(SYSTEM_INFO)
             ));
 
