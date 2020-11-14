@@ -20,4 +20,5 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     compileOnly 'org.projectlombok:lombok:1.18.8'
     compile 'org.java-websocket:Java-WebSocket:1.5.1'
+    compile 'com.github.oshi:oshi-core:5.3.5'
 }

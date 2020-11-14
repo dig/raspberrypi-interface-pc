@@ -27,6 +27,7 @@ public class InterfaceApp {
     private boolean lastIconState;
 
     private InterfaceSocket socket;
+    private Thread metricCollection;
 
     public InterfaceApp() {
         File folder = new File(System.getenv("APPDATA") + File.separator + "InterfaceClient");
@@ -60,6 +61,8 @@ public class InterfaceApp {
         } catch (URISyntaxException e) {
             log.log(Level.SEVERE, "Unable to create new socket connection", e);
         }
+
+        metricCollection = new MetricCollection();
     }
 
     private void createTrayIcon() throws IOException, AWTException {
@@ -75,6 +78,8 @@ public class InterfaceApp {
     }
 
     public void execute() {
+        metricCollection.start();
+
         int reconnect = (int) configuration.getOrDefault("socket-reconnect", Defaults.SOCKET_RECONNECT);
         try {
             socket.connectBlocking();
@@ -124,6 +129,9 @@ public class InterfaceApp {
     }
 
     private void close() {
+        if (metricCollection != null) {
+            metricCollection.interrupt();
+        }
         if (socket != null && socket.isOpen()) {
             socket.close();
         }
