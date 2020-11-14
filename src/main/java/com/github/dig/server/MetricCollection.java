@@ -1,6 +1,7 @@
 package com.github.dig.server;
 
 import com.github.dig.server.collector.Collector;
+import com.github.dig.server.collector.SystemUptimeCollector;
 import com.github.dig.server.collector.gpu.GpuNameCollector;
 import com.github.dig.server.collector.memory.MemoryAvailableCollector;
 import com.github.dig.server.collector.memory.MemoryNameCollector;
@@ -26,7 +27,9 @@ public class MetricCollection extends Thread {
 
             new MemoryAvailableCollector(SYSTEM_INFO),
             new MemoryNameCollector(SYSTEM_INFO),
-            new MemoryTotalCollector(SYSTEM_INFO)
+            new MemoryTotalCollector(SYSTEM_INFO),
+
+            new SystemUptimeCollector(SYSTEM_INFO.getOperatingSystem())
             ));
 
     @Override
@@ -39,7 +42,7 @@ public class MetricCollection extends Thread {
             }
 
             try {
-                sleep(100);
+                sleep(1000);
             } catch (InterruptedException e) {}
         }
     }
