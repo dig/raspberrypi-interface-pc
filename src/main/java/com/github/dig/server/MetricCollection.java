@@ -9,16 +9,18 @@ import com.github.dig.server.collector.memory.MemoryTotalCollector;
 import com.github.dig.server.collector.processor.ProcessorNameCollector;
 import com.github.dig.server.collector.processor.ProcessorTempCollector;
 import com.github.dig.server.collector.processor.ProcessorUsageCollector;
+import com.google.gson.Gson;
+import lombok.NonNull;
 import oshi.SystemInfo;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class MetricCollection extends Thread {
 
-    private final static SystemInfo SYSTEM_INFO = new SystemInfo();
-    private final static Set<Collector> COLLECTORS = new HashSet<>(Arrays.asList(
+    private final static Gson GSON = new Gson();
+
+    private final SystemInfo SYSTEM_INFO = new SystemInfo();
+    private final Set<Collector> COLLECTORS = new HashSet<>(Arrays.asList(
             new ProcessorNameCollector(SYSTEM_INFO),
             new ProcessorTempCollector(SYSTEM_INFO),
             new ProcessorUsageCollector(SYSTEM_INFO),
@@ -32,13 +34,23 @@ public class MetricCollection extends Thread {
             new SystemUptimeCollector(SYSTEM_INFO.getOperatingSystem())
             ));
 
+    private final Map<String, String> payload;
+    private final InterfaceSocket socket;
+    public MetricCollection(@NonNull InterfaceSocket socket) {
+        this.payload = new HashMap<>();
+        this.socket = socket;
+    }
+
     @Override
     public void run() {
         while (true) {
-            for (Collector collector : COLLECTORS) {
-                if (collector.canCollect()) {
-                    System.out.println(collector.getKey() + " : " + collector.collect());
-                }
+            payload.clear();
+            COLLECTORS.stream()
+                    .filter(Collector::canCollect)
+                    .forEach(collector -> payload.put(collector.getKey(), collector.collect()));
+
+            if (payload.size() > 0 && socket.isOpen()) {
+                socket.send("data", GSON.toJson(payload));
             }
 
             try {
