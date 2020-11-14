@@ -39,7 +39,7 @@ public class InterfaceSocket extends WebSocketClient {
     }
 
     public void send(@NonNull String event, @NonNull String... value) {
-        send(String.format("%s:%s", event, String.join(":", value)));
+        send(String.format("%s;%s", event, String.join(";", value)));
     }
 
     @Getter
