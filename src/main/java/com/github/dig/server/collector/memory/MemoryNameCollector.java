@@ -24,4 +24,9 @@ public class MemoryNameCollector extends MemoryCollector {
         }
         return name;
     }
+
+    @Override
+    protected long interval() {
+        return 0;
+    }
 }
