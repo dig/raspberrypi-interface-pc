@@ -19,6 +19,7 @@ public class ProcessorTempCollector extends ProcessorCollector {
 
     @Override
     public String collect() {
-        return String.valueOf(sensors.getCpuTemperature());
+        double temp = sensors.getCpuTemperature();
+        return String.valueOf(roundTwoDp(temp));
     }
 }

@@ -26,4 +26,8 @@ public abstract class Collector {
 
         return false;
     }
+
+    protected double roundTwoDp(double input) {
+        return Math.round(input * 100.0) / 100.0;
+    }
 }

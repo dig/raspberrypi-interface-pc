@@ -21,6 +21,6 @@ public class ProcessorUsageCollector extends ProcessorCollector {
     public String collect() {
         double d = processor.getSystemCpuLoadBetweenTicks(oldTicks);
         oldTicks = processor.getSystemCpuLoadTicks();
-        return String.valueOf(d * 100);
+        return String.valueOf(roundTwoDp(d * 100));
     }
 }
