@@ -1,6 +1,7 @@
 package com.github.dig.server;
 
 import com.github.dig.server.collector.Collector;
+import com.github.dig.server.collector.gpu.GpuNameCollector;
 import com.github.dig.server.collector.processor.ProcessorNameCollector;
 import com.github.dig.server.collector.processor.ProcessorTempCollector;
 import com.github.dig.server.collector.processor.ProcessorUsageCollector;
@@ -16,9 +17,9 @@ public class MetricCollection extends Thread {
     private final static Set<Collector> COLLECTORS = new HashSet<>(Arrays.asList(
             new ProcessorNameCollector(SYSTEM_INFO),
             new ProcessorTempCollector(SYSTEM_INFO),
-            new ProcessorUsageCollector(SYSTEM_INFO)
+            new ProcessorUsageCollector(SYSTEM_INFO),
 
-
+            new GpuNameCollector(SYSTEM_INFO)
             ));
 
     @Override
