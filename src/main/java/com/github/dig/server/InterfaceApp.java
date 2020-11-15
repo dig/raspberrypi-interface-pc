@@ -78,17 +78,17 @@ public class InterfaceApp {
     }
 
     public void execute() {
-        metricCollection.start();
-
         int reconnect = Integer.valueOf(configuration.getProperty("socket-reconnect", String.valueOf(Defaults.SOCKET_RECONNECT)));
         try {
             socket.connectBlocking();
             updateTray();
+            tryMetricCollection();
 
             while (true) {
                 if (socket.isClosed()) {
                     socket.reconnectBlocking();
                     updateTray();
+                    tryMetricCollection();
                 }
                 Thread.sleep(reconnect * 1000);
             }
@@ -112,6 +112,12 @@ public class InterfaceApp {
             } catch (IOException e) {
                 log.log(Level.SEVERE, "Unable to update tray icon", e);
             }
+        }
+    }
+
+    private void tryMetricCollection() {
+        if (socket.isOpen() && !metricCollection.isAlive()) {
+            metricCollection.start();
         }
     }
 
