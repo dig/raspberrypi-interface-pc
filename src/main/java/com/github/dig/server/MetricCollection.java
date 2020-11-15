@@ -37,15 +37,15 @@ public class MetricCollection extends Thread {
 
     private final Map<String, String> payload;
     private final InterfaceSocket socket;
-    private final Properties properties;
+    private final long delay;
 
     public MetricCollection(@NonNull InterfaceSocket socket,
                             @NonNull Properties properties) {
         this.payload = new HashMap<>();
         this.socket = socket;
-        this.properties = properties;
+        this.delay = Long.valueOf(properties.getProperty("refresh-time", String.valueOf(Defaults.REFRESH_TIME)));
 
-        int diskId = Integer.valueOf((String) properties.getOrDefault("disk-id", String.valueOf(Defaults.DISK_ID)));
+        int diskId = Integer.valueOf(properties.getProperty("disk-id", String.valueOf(Defaults.DISK_ID)));
         COLLECTORS.add(new DiskNameCollector(SYSTEM_INFO, diskId));
     }
 
@@ -62,7 +62,7 @@ public class MetricCollection extends Thread {
             }
 
             try {
-                sleep(1000);
+                sleep(delay);
             } catch (InterruptedException e) {}
         }
     }
