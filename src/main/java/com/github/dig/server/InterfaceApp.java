@@ -80,7 +80,7 @@ public class InterfaceApp {
     public void execute() {
         metricCollection.start();
 
-        int reconnect = Integer.valueOf((String) configuration.getOrDefault("socket-reconnect", Defaults.SOCKET_RECONNECT));
+        int reconnect = Integer.valueOf((Integer) configuration.getOrDefault("socket-reconnect", String.valueOf(Defaults.SOCKET_RECONNECT)));
         try {
             socket.connectBlocking();
             updateTrayIcon();
