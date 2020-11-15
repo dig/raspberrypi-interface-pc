@@ -11,4 +11,6 @@ public class Defaults {
 
     public final static int SOCKET_RECONNECT = 30;
 
+    public final static int DISK_ID = 0;
+
 }

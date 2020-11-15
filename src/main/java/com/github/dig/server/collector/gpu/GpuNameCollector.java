@@ -5,6 +5,8 @@ import oshi.SystemInfo;
 
 public class GpuNameCollector extends GpuCollector {
 
+    private final static String UNKNOWN_GPU = "Unknown";
+
     public GpuNameCollector(@NonNull SystemInfo systemInfo) {
         super(systemInfo);
     }
@@ -16,7 +18,7 @@ public class GpuNameCollector extends GpuCollector {
 
     @Override
     public String collect() {
-        return graphicsCard.getName();
+        return graphicsCard == null ? UNKNOWN_GPU : graphicsCard.getName();
     }
 
     @Override

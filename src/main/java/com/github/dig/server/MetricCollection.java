@@ -2,6 +2,7 @@ package com.github.dig.server;
 
 import com.github.dig.server.collector.Collector;
 import com.github.dig.server.collector.SystemUptimeCollector;
+import com.github.dig.server.collector.disk.DiskNameCollector;
 import com.github.dig.server.collector.gpu.GpuNameCollector;
 import com.github.dig.server.collector.memory.MemoryAvailableCollector;
 import com.github.dig.server.collector.memory.MemoryNameCollector;
@@ -21,24 +22,31 @@ public class MetricCollection extends Thread {
 
     private final SystemInfo SYSTEM_INFO = new SystemInfo();
     private final Set<Collector> COLLECTORS = new HashSet<>(Arrays.asList(
-            new ProcessorNameCollector(SYSTEM_INFO),
-            new ProcessorTempCollector(SYSTEM_INFO),
-            new ProcessorUsageCollector(SYSTEM_INFO),
-
             new GpuNameCollector(SYSTEM_INFO),
 
             new MemoryAvailableCollector(SYSTEM_INFO),
             new MemoryNameCollector(SYSTEM_INFO),
             new MemoryTotalCollector(SYSTEM_INFO),
 
+            new ProcessorNameCollector(SYSTEM_INFO),
+            new ProcessorTempCollector(SYSTEM_INFO),
+            new ProcessorUsageCollector(SYSTEM_INFO),
+
             new SystemUptimeCollector(SYSTEM_INFO.getOperatingSystem())
             ));
 
     private final Map<String, String> payload;
     private final InterfaceSocket socket;
-    public MetricCollection(@NonNull InterfaceSocket socket) {
+    private final Properties properties;
+
+    public MetricCollection(@NonNull InterfaceSocket socket,
+                            @NonNull Properties properties) {
         this.payload = new HashMap<>();
         this.socket = socket;
+        this.properties = properties;
+
+        int diskId = (int) properties.getOrDefault("disk-id", Defaults.DISK_ID);
+        COLLECTORS.add(new DiskNameCollector(SYSTEM_INFO, diskId));
     }
 
     @Override
