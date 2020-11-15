@@ -71,7 +71,7 @@ public class InterfaceApp {
         exitItem.addActionListener(e -> close());
         popup.add(exitItem);
 
-        trayIcon = new TrayIcon(getResourceImage("off.png"), "Interface Server", popup);
+        trayIcon = new TrayIcon(getResourceImage("off.png"), "Interface", popup);
         trayIcon.setImageAutoSize(true);
 
         SystemTray.getSystemTray().add(trayIcon);
@@ -83,12 +83,12 @@ public class InterfaceApp {
         int reconnect = Integer.valueOf(configuration.getProperty("socket-reconnect", String.valueOf(Defaults.SOCKET_RECONNECT)));
         try {
             socket.connectBlocking();
-            updateTrayIcon();
+            updateTray();
 
             while (true) {
                 if (socket.isClosed()) {
                     socket.reconnectBlocking();
-                    updateTrayIcon();
+                    updateTray();
                 }
                 Thread.sleep(reconnect * 1000);
             }
@@ -102,11 +102,12 @@ public class InterfaceApp {
         return ImageIO.read(getClass().getClassLoader().getResourceAsStream(imagePath));
     }
 
-    private void updateTrayIcon() {
+    private void updateTray() {
         if (lastIconState != socket.isOpen()) {
             lastIconState = socket.isOpen();
 
             try {
+                trayIcon.setToolTip("Interface: " + (socket.isOpen() ? "Connected" : "Disconnected"));
                 trayIcon.setImage(getResourceImage((socket.isOpen() ? "on" : "off") + ".png"));
             } catch (IOException e) {
                 log.log(Level.SEVERE, "Unable to update tray icon", e);
