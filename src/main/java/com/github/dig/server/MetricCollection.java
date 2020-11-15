@@ -7,6 +7,8 @@ import com.github.dig.server.collector.gpu.GpuNameCollector;
 import com.github.dig.server.collector.memory.MemoryAvailableCollector;
 import com.github.dig.server.collector.memory.MemoryNameCollector;
 import com.github.dig.server.collector.memory.MemoryTotalCollector;
+import com.github.dig.server.collector.network.NetworkBytesRecvCollector;
+import com.github.dig.server.collector.network.NetworkBytesSentCollector;
 import com.github.dig.server.collector.processor.ProcessorNameCollector;
 import com.github.dig.server.collector.processor.ProcessorTempCollector;
 import com.github.dig.server.collector.processor.ProcessorUsageCollector;
@@ -27,6 +29,9 @@ public class MetricCollection extends Thread {
             new MemoryAvailableCollector(SYSTEM_INFO),
             new MemoryNameCollector(SYSTEM_INFO),
             new MemoryTotalCollector(SYSTEM_INFO),
+
+            new NetworkBytesRecvCollector(SYSTEM_INFO),
+            new NetworkBytesSentCollector(SYSTEM_INFO),
 
             new ProcessorNameCollector(SYSTEM_INFO),
             new ProcessorTempCollector(SYSTEM_INFO),
