@@ -16,6 +16,7 @@ public class NetworkBytesSentCollector extends NetworkCollector {
 
     @Override
     public String collect() {
+        network.updateAttributes();
         return String.valueOf(network == null ? 0 : network.getBytesSent());
     }
 }
