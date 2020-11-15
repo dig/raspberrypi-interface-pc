@@ -62,7 +62,7 @@ public class InterfaceApp {
             log.log(Level.SEVERE, "Unable to create new socket connection", e);
         }
 
-        metricCollection = new MetricCollection(socket);
+        metricCollection = new MetricCollection(socket, configuration);
     }
 
     private void createTrayIcon() throws IOException, AWTException {
