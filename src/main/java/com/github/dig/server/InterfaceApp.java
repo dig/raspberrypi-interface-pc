@@ -56,8 +56,8 @@ public class InterfaceApp {
         }
 
         try {
-            String hostName = configuration.getProperty("hostUri", Defaults.HOST);
-            socket = new InterfaceSocket(new URI(hostName), configuration.getProperty("authKey", Defaults.AUTH_KEY));
+            String hostName = configuration.getProperty("host-uri", Defaults.HOST);
+            socket = new InterfaceSocket(new URI(hostName), configuration.getProperty("auth-key", Defaults.AUTH_KEY));
         } catch (URISyntaxException e) {
             log.log(Level.SEVERE, "Unable to create new socket connection", e);
         }
@@ -80,7 +80,7 @@ public class InterfaceApp {
     public void execute() {
         metricCollection.start();
 
-        int reconnect = (int) configuration.getOrDefault("socket-reconnect", Defaults.SOCKET_RECONNECT);
+        int reconnect = Integer.valueOf((String) configuration.getOrDefault("socket-reconnect", Defaults.SOCKET_RECONNECT));
         try {
             socket.connectBlocking();
             updateTrayIcon();

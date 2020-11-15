@@ -45,7 +45,7 @@ public class MetricCollection extends Thread {
         this.socket = socket;
         this.properties = properties;
 
-        int diskId = (int) properties.getOrDefault("disk-id", Defaults.DISK_ID);
+        int diskId = Integer.valueOf((String) properties.getOrDefault("disk-id", Defaults.DISK_ID));
         COLLECTORS.add(new DiskNameCollector(SYSTEM_INFO, diskId));
     }
 
