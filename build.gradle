@@ -18,6 +18,13 @@ launch4j {
     outfile = "InterfaceClient.exe"
 }
 
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': project.version
+    }
+}
+
 repositories {
     mavenCentral()
 }

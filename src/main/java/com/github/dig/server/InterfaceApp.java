@@ -82,7 +82,7 @@ public class InterfaceApp {
         exitItem.addActionListener(e -> close());
         popup.add(exitItem);
 
-        trayIcon = new TrayIcon(getResourceImage("off.png"), "InterfaceClient", popup);
+        trayIcon = new TrayIcon(getResourceImage("off.png"), "InterfaceClient v" + getBuildVersion(), popup);
         trayIcon.setImageAutoSize(true);
 
         SystemTray.getSystemTray().add(trayIcon);
@@ -118,7 +118,6 @@ public class InterfaceApp {
             lastIconState = socket.isOpen();
 
             try {
-                trayIcon.setToolTip("Interface: " + (socket.isOpen() ? "Connected" : "Disconnected"));
                 trayIcon.setImage(getResourceImage((socket.isOpen() ? "on" : "off") + ".png"));
             } catch (IOException e) {
                 log.log(Level.SEVERE, "Unable to update tray icon", e);
@@ -169,6 +168,10 @@ public class InterfaceApp {
             socket.close();
         }
         System.exit(0);
+    }
+
+    private String getBuildVersion() {
+        return InterfaceApp.class.getPackage().getImplementationVersion();
     }
 
     public static void main(String args[]) {
