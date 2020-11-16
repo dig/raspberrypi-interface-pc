@@ -73,7 +73,8 @@ public class InterfaceApp {
         PopupMenu popup = new PopupMenu();
 
         CheckboxMenuItem startupItem = new CheckboxMenuItem("Run on startup");
-        startupItem.setState(Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY));
+        startupItem.setState(Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER,
+                "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY));
         startupItem.addItemListener(e -> runOnStartup(startupItem.getState()));
 
         popup.add(startupItem);
@@ -146,17 +147,22 @@ public class InterfaceApp {
     }
 
     private void runOnStartup(boolean state) {
-        boolean containsRegistry = Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY);
+        boolean containsRegistry = Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER,
+                "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY);
+
         if (state && !containsRegistry) {
             try {
                 File executable = new File(InterfaceApp.class.getProtectionDomain().getCodeSource().getLocation()
                         .toURI());
-                Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY, executable.getAbsolutePath());
+
+                Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER,
+                        "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY, executable.getAbsolutePath());
             } catch (URISyntaxException e) {
                 log.log(Level.SEVERE, "Unable to find executable", e);
             }
         } else if (!state && containsRegistry) {
-            Advapi32Util.registryDeleteValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY);
+            Advapi32Util.registryDeleteValue(WinReg.HKEY_CURRENT_USER,
+                    "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY);
         }
     }
 
