@@ -15,7 +15,7 @@ launch4j {
     manifest = "${projectDir}/app.manifest"
     copyConfigurable = project.tasks.shadowJar.outputs.files
     jar = "lib/${project.name}-${project.version}-all.jar"
-    outfile = "InterfaceClient-${project.version}.exe"
+    outfile = "InterfaceClient.exe"
 }
 
 repositories {

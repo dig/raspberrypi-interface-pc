@@ -1,5 +1,7 @@
 package com.github.dig.server;
 
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
@@ -17,6 +19,8 @@ import java.util.logging.Level;
 @Log
 @Getter
 public class InterfaceApp {
+
+    private final static String REGISTRY_KEY = "InterfaceClient";
 
     @Getter
     private static InterfaceApp instance;
@@ -67,11 +71,18 @@ public class InterfaceApp {
 
     private void createTrayIcon() throws IOException, AWTException {
         PopupMenu popup = new PopupMenu();
+
+        CheckboxMenuItem startupItem = new CheckboxMenuItem("Run on startup");
+        startupItem.setState(Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY));
+        startupItem.addItemListener(e -> runOnStartup(startupItem.getState()));
+
+        popup.add(startupItem);
+
         MenuItem exitItem = new MenuItem("Close");
         exitItem.addActionListener(e -> close());
         popup.add(exitItem);
 
-        trayIcon = new TrayIcon(getResourceImage("off.png"), "Interface", popup);
+        trayIcon = new TrayIcon(getResourceImage("off.png"), "InterfaceClient", popup);
         trayIcon.setImageAutoSize(true);
 
         SystemTray.getSystemTray().add(trayIcon);
@@ -133,6 +144,21 @@ public class InterfaceApp {
         }
 
         return false;
+    }
+
+    private void runOnStartup(boolean state) {
+        boolean containsRegistry = Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY);
+        if (state && !containsRegistry) {
+            try {
+                File executable = new File(InterfaceApp.class.getProtectionDomain().getCodeSource().getLocation()
+                        .toURI());
+                Advapi32Util.registrySetStringValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY, executable.getAbsolutePath());
+            } catch (URISyntaxException e) {
+                log.log(Level.SEVERE, "Unable to find executable", e);
+            }
+        } else if (!state && containsRegistry) {
+            Advapi32Util.registryDeleteValue(WinReg.HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY);
+        }
     }
 
     private void close() {
