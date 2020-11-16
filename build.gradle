@@ -1,16 +1,22 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'java'
-    id 'application'
+    id 'edu.sc.seis.launch4j' version '2.4.9'
 }
-
-mainClassName = 'com.github.dig.server.InterfaceApp'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group 'com.github.dig'
 version '1.0-SNAPSHOT'
+
+launch4j {
+    mainClassName = 'com.github.dig.server.InterfaceApp'
+    manifest = "${projectDir}/app.manifest"
+    copyConfigurable = project.tasks.shadowJar.outputs.files
+    jar = "lib/${project.name}-${project.version}-all.jar"
+    outfile = "InterfaceClient-${project.version}.exe"
+}
 
 repositories {
     mavenCentral()
