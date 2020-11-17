@@ -22,6 +22,6 @@ public abstract class NetworkCollector extends Collector {
 
     @Override
     protected long interval() {
-        return TimeUnit.SECONDS.toMillis(1);
+        return TimeUnit.SECONDS.toMillis(10);
     }
 }
