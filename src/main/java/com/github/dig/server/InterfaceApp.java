@@ -72,11 +72,38 @@ public class InterfaceApp {
     private void createTrayIcon() throws IOException, AWTException {
         PopupMenu popup = new PopupMenu();
 
+        Menu piMenu = new Menu("Device");
+        MenuItem updateItem = new MenuItem("Update");
+        MenuItem restartItem = new MenuItem("Restart");
+        MenuItem shutdownItem = new MenuItem("Shutdown");
+
+        updateItem.addActionListener(e -> {
+            if (socket.isOpen()) {
+                socket.send("update", String.valueOf(true));
+            }
+        });
+
+        restartItem.addActionListener(e -> {
+            if (socket.isOpen()) {
+                socket.send("restart", String.valueOf(true));
+            }
+        });
+
+        shutdownItem.addActionListener(e -> {
+            if (socket.isOpen()) {
+                socket.send("shutdown", String.valueOf(true));
+            }
+        });
+
+        piMenu.add(updateItem);
+        piMenu.add(restartItem);
+        piMenu.add(shutdownItem);
+        popup.add(piMenu);
+
         CheckboxMenuItem startupItem = new CheckboxMenuItem("Run on startup");
         startupItem.setState(Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER,
                 "Software\\Microsoft\\Windows\\CurrentVersion\\Run", REGISTRY_KEY));
         startupItem.addItemListener(e -> runOnStartup(startupItem.getState()));
-
         popup.add(startupItem);
 
         MenuItem exitItem = new MenuItem("Close");
