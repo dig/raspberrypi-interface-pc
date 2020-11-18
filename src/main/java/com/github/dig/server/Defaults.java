@@ -13,6 +13,8 @@ public class Defaults {
 
     public final static int DISK_ID = 0;
 
+    public final static int NETWORK_CARD_ID = 0;
+
     public final static long REFRESH_TIME = 5000;
 
 }

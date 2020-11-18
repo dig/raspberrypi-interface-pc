@@ -13,10 +13,10 @@ public abstract class NetworkCollector extends Collector {
 
     protected NetworkIF network;
 
-    public NetworkCollector(@NonNull SystemInfo systemInfo) {
+    public NetworkCollector(@NonNull SystemInfo systemInfo, int networkCardId) {
         List<NetworkIF> networkIFs = systemInfo.getHardware().getNetworkIFs();
-        if (networkIFs.size() > 0) {
-            this.network = networkIFs.get(0);
+        if (networkIFs.size() > networkCardId) {
+            this.network = networkIFs.get(networkCardId);
         }
     }
 

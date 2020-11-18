@@ -30,9 +30,6 @@ public class MetricCollection extends Thread {
             new MemoryNameCollector(SYSTEM_INFO),
             new MemoryTotalCollector(SYSTEM_INFO),
 
-            new NetworkBytesRecvCollector(SYSTEM_INFO),
-            new NetworkBytesSentCollector(SYSTEM_INFO),
-
             new ProcessorNameCollector(SYSTEM_INFO),
             new ProcessorTempCollector(SYSTEM_INFO),
             new ProcessorUsageCollector(SYSTEM_INFO),
@@ -52,6 +49,10 @@ public class MetricCollection extends Thread {
 
         int diskId = Integer.valueOf(properties.getProperty("disk-id", String.valueOf(Defaults.DISK_ID)));
         COLLECTORS.add(new DiskNameCollector(SYSTEM_INFO, diskId));
+
+        int networkCardId = Integer.valueOf(properties.getProperty("network-card-id", String.valueOf(Defaults.NETWORK_CARD_ID)));
+        COLLECTORS.add(new NetworkBytesRecvCollector(SYSTEM_INFO, networkCardId));
+        COLLECTORS.add(new NetworkBytesSentCollector(SYSTEM_INFO, networkCardId));
     }
 
     @Override
