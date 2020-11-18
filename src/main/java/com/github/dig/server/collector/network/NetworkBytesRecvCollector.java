@@ -5,8 +5,8 @@ import oshi.SystemInfo;
 
 public class NetworkBytesRecvCollector extends NetworkCollector {
 
-    public NetworkBytesRecvCollector(@NonNull SystemInfo systemInfo) {
-        super(systemInfo);
+    public NetworkBytesRecvCollector(@NonNull SystemInfo systemInfo, int networkCardId) {
+        super(systemInfo, networkCardId);
     }
 
     @Override
